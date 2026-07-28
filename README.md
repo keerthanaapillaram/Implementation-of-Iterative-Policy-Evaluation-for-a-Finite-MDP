@@ -100,34 +100,60 @@ Where:
 
 ```python
 
-
 # -------------------------------------------------
 # Policy Evaluation Function
 # -------------------------------------------------
 
+def policy_evaluation(env, policy, gamma=0.99, theta=1e-8):
+
+    n_states = env.observation_space.n
+    V = np.zeros(n_states)
+    iterations = 0
+
+    while True:
+        delta = 0
+
+        for s in range(n_states):
+            v = 0
+
+            for a, action_prob in enumerate(policy[s]):
+                for prob, next_state, reward, done in env.P[s][a]:
+                    v += action_prob * prob * (
+                        reward + gamma * V[next_state] * (not done)
+                    )
+
+            delta = max(delta, abs(v - V[s]))
+            V[s] = v
+
+        iterations += 1
+
+        if delta < theta:
+            break
+
+    return V, iterations
 
 # -------------------------------------------------
 # Display Output
 # -------------------------------------------------
 
-# Change the parameters and observe the results
+V, iterations = policy_evaluation(env, policy, gamma, theta)
 
-```
+print("Name : ")
+print("Register Number : ")
+
+print("\nNumber of Iterations:", iterations)
+
+print("\nState-Value Function:")
+print(V)
+
+print("\nState-Value Function as 4x4 Grid:")
+print(V.reshape((4, 4)))
 
 ---
 
 ## Output
 
-```text
-
-Number of Iterations: 
-
-State-Value Function as 4x4 Grid:
-
-
-
-```
----
+<img width="857" height="271" alt="image" src="https://github.com/user-attachments/assets/6a5bedfb-ca50-433b-b87a-fc23f5577867" />
 
 ## Result
 
@@ -137,15 +163,5 @@ Iterative policy evaluation was implemented successfully using the Gymnasium Fro
 
 ## Inference
 
-```text
-
-
-
-```
-
-
-
-
----
-
+The iterative policy evaluation algorithm successfully computed the state-value function by repeatedly applying the Bellman expectation equation until convergence. The resulting values represent the expected future reward from each state when following the fixed random policy. States closer to the goal have higher values, while terminal (hole and goal) states have zero value because no further rewards can be obtained after reaching them.
 
