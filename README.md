@@ -149,7 +149,8 @@ print(V)
 print("\nState-Value Function as 4x4 Grid:")
 print(V.reshape((4, 4)))
 
----
+```
+
 
 ## Output
 
