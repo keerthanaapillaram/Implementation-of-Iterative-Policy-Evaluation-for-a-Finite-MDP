@@ -99,12 +99,34 @@ Where:
 ## Program
 
 ```python
+import gymnasium as gym
+import numpy as np
+
+# -------------------------------------------------
+# Create FrozenLake Environment
+# -------------------------------------------------
+env = gym.make("FrozenLake-v1", map_name="4x4", is_slippery=False)
+env = env.unwrapped
+
+# -------------------------------------------------
+# Parameters
+# -------------------------------------------------
+gamma = 0.94
+theta = 1e-4
+
+# -------------------------------------------------
+# Random Policy
+# -------------------------------------------------
+n_states = env.observation_space.n
+n_actions = env.action_space.n
+
+# Equal probability for all actions
+policy = np.ones((n_states, n_actions)) / n_actions
 
 # -------------------------------------------------
 # Policy Evaluation Function
 # -------------------------------------------------
-
-def policy_evaluation(env, policy, gamma=0.99, theta=1e-8):
+def policy_evaluation(env, policy, gamma=0.94, theta=1e-4):
 
     n_states = env.observation_space.n
     V = np.zeros(n_states)
@@ -133,13 +155,18 @@ def policy_evaluation(env, policy, gamma=0.99, theta=1e-8):
     return V, iterations
 
 # -------------------------------------------------
-# Display Output
+# Evaluate Policy
 # -------------------------------------------------
-
 V, iterations = policy_evaluation(env, policy, gamma, theta)
 
+# -------------------------------------------------
+# Display Output
+# -------------------------------------------------
 print("Name : ")
 print("Register Number : ")
+
+print("\nGamma :", gamma)
+print("Theta :", theta)
 
 print("\nNumber of Iterations:", iterations)
 
@@ -148,13 +175,11 @@ print(V)
 
 print("\nState-Value Function as 4x4 Grid:")
 print(V.reshape((4, 4)))
-
 ```
-
 
 ## Output
 
-<img width="857" height="271" alt="image" src="https://github.com/user-attachments/assets/6a5bedfb-ca50-433b-b87a-fc23f5577867" />
+<img width="896" height="266" alt="image" src="https://github.com/user-attachments/assets/8b5e911a-7207-46cf-aaa5-50ae742c92a6" />
 
 ## Result
 
@@ -164,5 +189,5 @@ Iterative policy evaluation was implemented successfully using the Gymnasium Fro
 
 ## Inference
 
-The iterative policy evaluation algorithm successfully computed the state-value function by repeatedly applying the Bellman expectation equation until convergence. The resulting values represent the expected future reward from each state when following the fixed random policy. States closer to the goal have higher values, while terminal (hole and goal) states have zero value because no further rewards can be obtained after reaching them.
+The iterative policy evaluation algorithm successfully estimated the state-value function for the given random policy. The experiment showed that changing the values of gamma, theta, and the is_slippery setting affected the convergence behaviour and the estimated state values. A lower gamma reduced the importance of future rewards, a higher theta reduced the number of iterations required for convergence, and setting is_slippery = False made the environment deterministic. Thus, the experiment demonstrates that these parameters significantly influence the performance and outcome of the policy evaluation process.
 
