@@ -162,8 +162,8 @@ V, iterations = policy_evaluation(env, policy, gamma, theta)
 # -------------------------------------------------
 # Display Output
 # -------------------------------------------------
-print("Name : ")
-print("Register Number : ")
+print("Name : P Keerthana")
+print("Register Number : 212223240069")
 
 print("\nGamma :", gamma)
 print("Theta :", theta)
